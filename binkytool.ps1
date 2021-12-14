@@ -17,13 +17,16 @@ switch ($Functionnality) {
         $opt = [Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType]::ppSaveAsPDF
         $FileBrowser.FileNames | ForEach-Object {
             $ifile = $_
-            $pres = $ppt.Presentations.Open($ifile)
-            $pathname = split-path $ifile
-            $filename = Split-Path $ifile -Leaf
-            $file = $filename.split(".")[0]
-            $ofile = $pathname + "\" + $file + ".pdf"
-            $pres.SaveAs($ofile, $opt)
-            $pres.Close()
+            $pres = $null
+            try {
+                $pres = $ppt.Presentations.Open($ifile)
+                $pathname = split-path $ifile
+                $filename = Split-Path $ifile -Leaf
+                $file = $filename.split(".")[0]
+                $ofile = $pathname + "\" + $file + ".pdf"
+                $pres.SaveAs($ofile, $opt)
+            }
+            finally {$pres.Close()}
         }
         [System.Windows.Forms.MessageBox]::Show("PowerPoint to PDF conversion done")
     }       
@@ -39,13 +42,16 @@ switch ($Functionnality) {
         $opt = [Microsoft.Office.Interop.Word.WdSaveFormat]::wdFormatPDF
         $FileBrowser.FileNames | ForEach-Object {
             $ifile = $_
-            $doc = $word.Documents.Open($ifile)
-            $pathname = split-path $ifile
-            $filename = Split-Path $ifile -Leaf
-            $file = $filename.split(".")[0]
-            $ofile = $pathname + "\" + $file + ".pdf"
-            $doc.SaveAs($ofile, $opt)
-            $doc.Close()
+            $doc = $null
+            try {
+                $doc = $word.Documents.Open($ifile)
+                $pathname = split-path $ifile
+                $filename = Split-Path $ifile -Leaf
+                $file = $filename.split(".")[0]
+                $ofile = $pathname + "\" + $file + ".pdf"
+                $doc.SaveAs($ofile, $opt)
+            } 
+            finally {$doc.Close()}
         }
         [System.Windows.Forms.MessageBox]::Show("Word to PDF conversion done")
 
